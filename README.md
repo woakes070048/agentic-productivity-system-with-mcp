@@ -398,8 +398,8 @@ graph TB
 | --- | --- | --- | --- |
 | `calendar_agent` | CRUD events, list, search | Google Calendar | - |
 | `gmail_agent` | Send, reply, label, search | Gmail | - |
-| `financial_agent` | Log expenses, read balance | Google Sheets | `personal` |
-| `financial_report` | Generate charts, summaries | Google Sheets + Chart.js | `personal` |
+| `financial_agent` | Log expenses, read balance | Google Sheets | `personal or business` |
+| `financial_report` | Generate charts, summaries | Google Sheets + Chart.js | `personal or business` |
 | `tasks_agent` | CRUD tasks, mark complete | Google Tasks | - |
 
 **MCP Call Example:**
