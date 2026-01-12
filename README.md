@@ -10,8 +10,6 @@
 
 ## 📋 Visão Geral
 
-![Demo](assets/demo.gif)
-
 **Mira** é a orquestradora baseada em IA que centraliza serviços do Google Workspace (Calendar, Tasks, Gmail) e gerenciamento financeiro em uma interface conversacional no Telegram. O sistema implementa uma arquitetura cognitiva inspirada no modelo de memória humana, com processamento sensorial, memória de curto prazo e consolidação para memória de longo prazo.
 
 ![Orquestrador](assets/orchestrator.png)
@@ -108,7 +106,7 @@ graph TB
 
 ### 1. Sensory Layer (Input Processing)
 
-![Input Processing](assets/input_processing.png)
+![Sensory Identifier](assets/sensory-identifier.png)
 
 **Responsabilidade**: Identificação e normalização de inputs multimodais.
 
@@ -146,7 +144,7 @@ graph LR
 
 ### 2. Sensory Memory (Message Buffer)
 
-![Buffer](assets/message_buffer.png)
+![Buffer](assets/sensory-memory.png)
 
 **Responsabilidade**: Agregação de mensagens sequenciais para construção de contexto.
 
@@ -338,7 +336,7 @@ WITH (lists = 100);
 
 ### 5. MCP Sub-agents (Task Delegation)
 
-![sub-agents](assets/sub-agents.png)
+![sub-agents](assets/sub-agent-mcp.png)
 
 **MCP Protocol**: Model Context Protocol para comunicação entre agente principal e sub-agentes especializados.
 
@@ -369,7 +367,7 @@ graph TB
 
 **Sub-agents Specs:**
 
-![calendar-agent](assets/calendar-agent.png)
+![financial-agent](assets/financial-agent.png)
 
 | Agent | Capabilities | API | Scope |
 |-------|-------------|-----|-------|
