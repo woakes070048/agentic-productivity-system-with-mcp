@@ -1,5 +1,4 @@
-# 🟣 Mira - Cognitive AI Assistant
-
+# 🟣 Agentic Productivity System with MCP
 > Assistente executivo cognitivo com memória persistente, processamento multimodal e orquestração de sub-agentes via MCP Protocol.
 
 [![n8n](https://img.shields.io/badge/n8n-Workflow-FF6D5A?logo=n8n)](https://n8n.io)
@@ -11,7 +10,11 @@
 
 ## 📋 Visão Geral
 
-**Mira** é um assistente executivo baseado em IA que centraliza serviços do Google Workspace (Calendar, Tasks, Gmail) e gerenciamento financeiro em uma interface conversacional no Telegram. O sistema implementa uma arquitetura cognitiva inspirada no modelo de memória humana, com processamento sensorial, memória de curto prazo e consolidação para memória de longo prazo.
+![Demo](assets/demo.gif)
+
+**Mira** é a orquestradora baseada em IA que centraliza serviços do Google Workspace (Calendar, Tasks, Gmail) e gerenciamento financeiro em uma interface conversacional no Telegram. O sistema implementa uma arquitetura cognitiva inspirada no modelo de memória humana, com processamento sensorial, memória de curto prazo e consolidação para memória de longo prazo.
+
+![Orquestrador](assets/orchestrator.png)
 
 ### Características Principais
 
@@ -99,65 +102,13 @@ graph TB
     CLEAN --> BUFFER
 ```
 
-### Detailed Cognitive Flow
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant T as Telegram
-    participant S as Sensory Layer
-    participant B as Buffer (3s)
-    participant A as Agent (GPT-4.1)
-    participant STM as Short-term Memory
-    participant LTM as Long-term Memory
-    participant MCP as MCP Sub-agents
-    
-    U->>T: Send message/media
-    T->>S: Route by content type
-    
-    alt Audio
-        S->>S: Transcribe (Gemini 2.0)
-    else Image
-        S->>S: Analyze (Gemini 2.0)
-    else Document
-        S->>S: Extract (Gemini 2.0)
-    end
-    
-    S->>S: Guardrails check
-    
-    alt Content Safe
-        S->>B: Store in buffer
-        Note over B: Wait 3s for context
-        B->>B: Aggregate messages
-        B->>A: Send full context
-        
-        A->>A: Think (intent analysis)
-        A->>STM: Fetch last 10 messages
-        
-        alt Needs historical context
-            A->>LTM: Vector search
-            LTM-->>A: Relevant memories
-        end
-        
-        alt Action required
-            A->>MCP: Delegate task
-            MCP-->>A: Result
-        end
-        
-        A->>T: Send response
-        T->>U: Deliver message
-        B->>B: Cleanup buffer
-    else Content Unsafe
-        S->>T: Send rejection
-        T->>U: Safety message
-    end
-```
-
 ---
 
 ## 🧩 Componentes Técnicos
 
 ### 1. Sensory Layer (Input Processing)
+
+![Input Processing](assets/input_processing.png)
 
 **Responsabilidade**: Identificação e normalização de inputs multimodais.
 
@@ -195,6 +146,8 @@ graph LR
 
 ### 2. Sensory Memory (Message Buffer)
 
+![Buffer](assets/message_buffer.png)
+
 **Responsabilidade**: Agregação de mensagens sequenciais para construção de contexto.
 
 **Algoritmo:**
@@ -229,6 +182,8 @@ DELETE FROM message_buffer WHERE batch_id = $execution_id;
 ---
 
 ### 3. Cognitive Layer (Agent + Memory)
+
+![Agent](assets/agent.png)
 
 #### Agent Architecture
 
@@ -294,6 +249,8 @@ graph TB
 
 #### Short-term Memory (Working Memory)
 
+![stm](assets/stm.png)
+
 ```mermaid
 graph LR
     A[New Interaction] --> B[(PostgreSQL<br/>n8n_chat_histories)]
@@ -318,6 +275,8 @@ CREATE TABLE n8n_chat_histories (
 - **Cleanup**: Mensagens > 30 dias deletadas (monthly cron)
 
 #### Long-term Memory (Episodic Memory)
+
+![ltm](assets/ltm.png)
 
 ```mermaid
 graph TB
@@ -379,11 +338,13 @@ WITH (lists = 100);
 
 ### 5. MCP Sub-agents (Task Delegation)
 
+![sub-agents](assets/sub-agents.png)
+
 **MCP Protocol**: Model Context Protocol para comunicação entre agente principal e sub-agentes especializados.
 
 ```mermaid
 graph TB
-    AGENT[Complex Agent] -->|MCP Request| SERVER[MCP Server<br/>n8n.wedgedynamics.com/mcp]
+    AGENT[Complex Agent] -->|MCP Request| SERVER[MCP Server]
     
     SERVER --> CAL[calendar_agent]
     SERVER --> MAIL[gmail_agent]
@@ -407,6 +368,8 @@ graph TB
 ```
 
 **Sub-agents Specs:**
+
+![calendar-agent](assets/calendar-agent.png)
 
 | Agent | Capabilities | API | Scope |
 |-------|-------------|-----|-------|
@@ -457,17 +420,12 @@ gantt
 
 | Cenário | Latência | Tokens | Custo (estimado) |
 |---------|----------|--------|------------------|
-| Texto simples (sem tools) | 2-3s | 1k-3k | $0.001-0.003 |
-| Texto + tool calling | 3-5s | 4k-15k | $0.004-0.015 |
-| Áudio/Imagem | 3-4s | 2k-5k | $0.002-0.005 |
-| Documento grande | 4-6s | 5k-20k | $0.005-0.020 |
+| Texto simples (sem tools) | ~3s | 1k-3k | $0.001-0.003 |
+| Texto + tool calling  | ~7s-10s | 4k-15k | $0.004-0.015 |
 
 ### Memory Statistics
-
-- **Buffer Throughput**: ~50 msgs/min (com agregação)
 - **Short-term Window**: 10 mensagens (rolling)
-- **Long-term Storage**: ~500 memories/mês
-- **Retrieval Accuracy**: ~87% (manual evaluation)
+- **Long-term Storage**: ~30 memories/mês
 
 ---
 
@@ -477,7 +435,7 @@ gantt
 - **Orchestration**: n8n (self-hosted)
 - **Database**: PostgreSQL 15 + pgvector
 - **Vector Store**: Supabase (managed)
-- **Hosting**: wedgedynamics.com
+- **Hosting**: Hostinger
 
 ### AI Models
 | Component | Model | Provider | Purpose |
@@ -541,62 +499,6 @@ gantt
 
 ---
 
-## 🔒 Segurança & Privacidade
-
-### Guardrails Implementation
-```mermaid
-graph LR
-    INPUT[User Input] --> GR{Guardrails}
-    GR -->|NSFW Check| NSFW[Llama 3.1 70B<br/>Threshold: 0.7]
-    GR -->|Jailbreak Check| JAIL[Llama 3.1 70B<br/>Threshold: 0.7]
-    
-    NSFW -->|Pass| SAFE[Continue]
-    NSFW -->|Fail| REJECT[Send Rejection]
-    
-    JAIL -->|Pass| SAFE
-    JAIL -->|Fail| REJECT
-    
-    REJECT --> USER[User receives<br/>"Conteúdo inapropriado"]
-```
-
-### Data Protection
-- ✅ **No logs de mensagens** em arquivos externos
-- ✅ **Credenciais isoladas** (n8n Credentials Manager)
-- ✅ **Buffer auto-cleanup** após cada interação
-- ✅ **Vector store isolado** por `chat_id`
-- ✅ **HTTPS/TLS** em todas as comunicações
-
-### Compliance
-- **LGPD**: Dados processados apenas mediante interação
-- **Retenção**: 30 dias (short-term), indefinido (long-term com opt-out)
-- **Right to Erasure**: Comando `/delete_data` disponível
-
----
-
-## 📈 Roadmap
-
-### ✅ Implementado
-- [x] Processamento multimodal (texto, áudio, imagem, documento)
-- [x] Sistema de memória em 3 camadas
-- [x] MCP sub-agents (Calendar, Gmail, Finance, Tasks)
-- [x] Guardrails de segurança
-- [x] Web search nativo
-- [x] Consolidação diária de memória
-
-### 🔄 Em Desenvolvimento
-- [ ] **Proactive Notifications**: Lembretes baseados em contexto
-- [ ] **Multi-user Support**: Workspaces compartilhados
-- [ ] **Voice Output**: Respostas em áudio via TTS
-- [ ] **Advanced RAG**: Reranking + Hybrid Search
-
-### 🔮 Futuro
-- [ ] **Mobile App**: Interface nativa iOS/Android
-- [ ] **Plugin System**: Extensões customizáveis
-- [ ] **Fine-tuned Models**: Modelos especializados por domínio
-- [ ] **Federated Learning**: Melhorias preservando privacidade
-
----
-
 ## 📄 Documentação Técnica Completa
 
 Este README apresenta a arquitetura high-level do projeto. Para acesso à documentação técnica completa, incluindo:
@@ -607,7 +509,7 @@ Este README apresenta a arquitetura high-level do projeto. Para acesso à docume
 - 📝 Workflow JSON sanitizado
 - 🧪 Testes de performance
 
-**Entre em contato** via [seu email/linkedin].
+**Entre em contato** via codeajr@gmail.com.
 
 ---
 
