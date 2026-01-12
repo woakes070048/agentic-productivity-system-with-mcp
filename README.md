@@ -426,7 +426,7 @@ graph TB
 
 ### Error Handling
 
-![Error Handling](error-handling.png)
+![Error Handling](assets/error-handling.png)
 
 This system implements a robust error handling mechanism to ensure continuous execution and explicit recovery. Specifically, it uses an **Error Trigger** in n8n to detect failures and unblock the current flow state.
 
