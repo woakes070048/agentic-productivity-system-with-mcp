@@ -1,4 +1,8 @@
 # 🟣 Agentic Productivity System with MCP
+
+
+[Demo](https://www.linkedin.com/posts/andrecodea_artificialintelligence-n8n-aiautomation-activity-7402859317948768256-7zIF)
+
 > Assistente executivo cognitivo com memória persistente, processamento multimodal e orquestração de sub-agentes via MCP Protocol.
 
 [![n8n](https://img.shields.io/badge/n8n-Workflow-FF6D5A?logo=n8n)](https://n8n.io)
