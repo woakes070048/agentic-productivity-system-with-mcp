@@ -398,7 +398,7 @@ graph TB
 
 ### Error Handling
 
-![Error Handling](error-handling.png)
+![Error Handling](assets/error-handling.png)
 
 Este sistema implementa um mecanismo robusto de tratamento de erros para garantir execução contínua e recuperação explícita. Particularmente, utiliza um **Error Trigger** no n8n para detectar falhas e desbloquear o estado atual do fluxo.
 
